@@ -1,9 +1,10 @@
-import sys
+import sys, os
 from subprocess import Popen, PIPE, STDOUT
 
 global skip_install
 
 def run_cmd(command):
+    print("domino> " + " ".join(command))
     output = []
     p = Popen(command, bufsize=1, stdout=PIPE, stderr=STDOUT)
     for line in iter(p.stdout.readline, b''):
