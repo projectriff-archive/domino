@@ -23,9 +23,10 @@ if __name__ == "__main__":
         if sys.argv[1] == "--skip-install":
             util.skip_install = True
 
-    import setup, teardown, functions
+    import setup, teardown, functions, eventing
     setup.run()
     functions.run()
+    eventing.run()
     teardown.run()
 
     print("DONE!")

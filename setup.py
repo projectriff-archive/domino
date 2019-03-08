@@ -1,6 +1,8 @@
 import util
 
 def run():
+    print("***[ setup ] ***")
+
     print("== checking riff version")
     output = util.run_cmd(["riff", "version"])
     assert len(output) == 2
@@ -8,8 +10,14 @@ def run():
 
     print("== installing riff")
     if util.skip_install:
-        print("skipping\n")
-        util.run_cmd(["kubectl", "delete", "ksvc", "--all"])
+        print("skipping")
+        print("deleting any subscriptions")
+        util.run_cmd(["kubectl", "delete", "subscriptions", "--all"])
+        print("deleting any channels")
+        util.run_cmd(["kubectl", "delete", "channels", "--all"])
+        print("deleting any kservices")
+        util.run_cmd(["kubectl", "delete", "kservice", "--all"])
+        print("")
     else:
         output = util.run_cmd(["riff", "system", "install", "--force"])
         completed = output[len(output)-1]

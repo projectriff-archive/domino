@@ -5,7 +5,7 @@ global skip_install
 
 def run_cmd(command):
     output = []
-    p = Popen(command, bufsize=1, stdout=PIPE, stderr=STDOUT, close_fds=True)
+    p = Popen(command, bufsize=1, stdout=PIPE, stderr=STDOUT)
     for line in iter(p.stdout.readline, b''):
         out = line[0:-1].decode()
         print(out)
@@ -15,14 +15,34 @@ def run_cmd(command):
     print("")
     return output
 
+def get_cmd(command):
+    output = []
+    p = Popen(command, stdout=PIPE, stderr=STDOUT)
+    output = p.communicate()
+    rc = p.returncode
+    assert rc == 0
+    return output
+
 def create_fun(name, git, toml):
     print("== create function {name}".format(name=name))
     output = run_cmd(["riff", "function", "create", name, "--git-repo", git, toml.split(" ")[0], toml.split(" ")[1], "--wait"])
     completed = output[len(output)-1]
     assert completed == "riff function create completed successfully"
 
+def create_svc(name, image):
+    print("== create service {name} using image {image}".format(name=name, image=image))
+    output = run_cmd(["riff", "service", "create", name, "--image", image])
+    completed = output[len(output)-1]
+    assert completed == "riff service create completed successfully"
+
 def delete_svc(name):
-    print("== delete service".format(name))
+    print("== delete service {name}".format(name=name))
     output = run_cmd(["riff", "service", "delete", name])
     completed = output[len(output)-1]
     assert completed == "riff service delete completed successfully"
+
+def delete_resource(resource_type, name):
+    print("== delete {type} {name}".format(type=resource_type, name=name))
+    output = run_cmd(["riff", resource_type, "delete", name])
+    completed = output[len(output)-1]
+    assert completed == "riff {type} delete completed successfully".format(type=resource_type)
