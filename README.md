@@ -17,7 +17,7 @@ What it does:
 - installs Istio, Knative and riff (optional)
 - prepares the default namespace for GCR push
 - creates and tests JavaScript and Java functions
-- creates functioons, channels and subscriptions for "Hello 49" test
+- creates functions, channels and subscriptions for "Hello 49" test
 - cleans up the namespace
 - uninstalls Istio, Knative and riff (optional)
 
@@ -55,7 +55,7 @@ That's it.
 ```[bash]
 Aruba:domino trisberg$ python3 ./domino.py
 riff is for functions
-Domino is FaaS Acceptance Test Suite for Windows
+Domino is FaaS Acceptance Test Suite for riff on Windows
 
 ***[ setup ]***
 == checking riff version

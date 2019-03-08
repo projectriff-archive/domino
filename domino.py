@@ -3,7 +3,7 @@ import util
 
 if __name__ == "__main__":
     print("riff is for functions")
-    print("Domino is FaaS Acceptance Test Suite for Windows\n")
+    print("Domino is FaaS Acceptance Test Suite for riff on Windows\n")
 
     util.skip_install = False
     if len(sys.argv) > 1:
