@@ -1,5 +1,4 @@
 import sys
-from subprocess import Popen, PIPE, STDOUT
 import util
 
 if __name__ == "__main__":
