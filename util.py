@@ -36,10 +36,7 @@ def create_svc(name, image):
     assert completed == "riff service create completed successfully"
 
 def delete_svc(name):
-    print("== delete service {name}".format(name=name))
-    output = run_cmd(["riff", "service", "delete", name])
-    completed = output[len(output)-1]
-    assert completed == "riff service delete completed successfully"
+    delete_resource("service", name)
 
 def delete_resource(resource_type, name):
     print("== delete {type} {name}".format(type=resource_type, name=name))
