@@ -35,7 +35,7 @@ def invoke_correlator(channel, data, expected):
     assert result == str(expected)
 
 def run():
-    print("***[ eventing ] ***")
+    print("***[ eventing ]***")
     create_channel("numbers")
     create_channel("squares")
     create_channel("replies")

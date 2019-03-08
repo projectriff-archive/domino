@@ -1,7 +1,7 @@
 import util
 
 def run():
-    print("***[ setup ] ***")
+    print("***[ setup ]***")
 
     print("== checking riff version")
     output = util.run_cmd(["riff", "version"])

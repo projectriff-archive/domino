@@ -11,7 +11,7 @@ def test_fun(name, git, toml, data, expected):
     util.delete_svc(name)
 
 def run():
-    print("***[ functions ] ***")
+    print("***[ functions ]***")
 
     test_fun("squarew", "https://github.com/projectriff-samples/node-square.git", "--artifact square.js", 7, 49)
 

@@ -1,7 +1,7 @@
 import util
 
 def run():
-    print("***[ teardown ] ***")
+    print("***[ teardown ]***")
 
     print("== namespace cleanup default")
     output = util.run_cmd(["riff", "namespace", "cleanup", "default"])
