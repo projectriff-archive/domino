@@ -1,7 +1,15 @@
 import util
+import time
 
 def test_fun(name, git, toml, data, expected):
     util.create_fun(name, git, toml)
+    i = 1
+    while i < 10: 
+        ksvc = util.get_cmd(["kubectl", "get", "kservice", name, "-ojsonpath={.status.address.hostname}"])
+        if len(ksvc[0].decode()) > 0:
+            break
+        i += 1
+        time.sleep(5)
     if str(data).isdigit():
         output = util.run_cmd(["riff", "service", "invoke", name, "--json", "--", "-w", "\\n", "-d", str(data)])
     else:
