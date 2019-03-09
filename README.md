@@ -16,8 +16,8 @@ What it does:
 - uses `riff` and `kubectl` commands for everything
 - installs Istio, Knative and riff (optional)
 - prepares the default namespace for GCR push
-- creates and tests JavaScript and Java functions building on cluster
-- creates and tests command function with local-path build
+- creates and tests Java and command functions building on cluster
+- creates and tests Node.js function with local-path build
 - creates functions, channels and subscriptions for "Hello 49" test
 - cleans up the namespace
 - uninstalls Istio, Knative and riff (optional)
@@ -108,27 +108,13 @@ Setting default image prefix to "gcr.io/cf-sandbox-trisberg" for namespace "defa
 riff namespace init completed successfully
 
 ***[ functions ]***
-== create function square-nodejs
-domino> riff function create square-nodejs --git-repo https://github.com/projectriff-samples/node-square.git --artifact square.js --wait
-
-riff function create completed successfully
-
-domino> riff service invoke square-nodejs --json -- -w \n -d 7
-curl 35.238.161.31/ -H 'Host: square-nodejs.default.example.com' -H 'Content-Type: application/json' -w '\n' -d 7
-49
-
-== delete service square-nodejs
-domino> riff service delete square-nodejs
-
-riff service delete completed successfully
-
 == create function hello-java
 domino> riff function create hello-java --git-repo https://github.com/projectriff-samples/java-hello.git --handler functions.Hello --wait
 
 riff function create completed successfully
 
 domino> riff service invoke hello-java --text -- -w \n -d windows
-curl 35.238.161.31/ -H 'Host: hello-java.default.example.com' -H 'Content-Type: text/plain' -w '\n' -d windows
+curl 35.192.124.58/ -H 'Host: hello-java.default.example.com' -H 'Content-Type: text/plain' -w '\n' -d windows
 Hello windows
 
 == delete service hello-java
@@ -136,84 +122,120 @@ domino> riff service delete hello-java
 
 riff service delete completed successfully
 
-== create function uppercase-command for local-path
-domino> riff function create uppercase-command --invoker command --local-path ./fun --artifact uppercase.sh --wait
+== create function uppercase-command
+domino> riff function create uppercase-command --git-repo https://github.com/projectriff-samples/fats-uppercase-command.git --artifact uppercase.sh --wait
+
+riff function create completed successfully
+
+domino> riff service invoke uppercase-command --text -- -w \n -d domino
+curl 35.192.124.58/ -H 'Host: uppercase-command.default.example.com' -H 'Content-Type: text/plain' -w '\n' -d domino
+DOMINO
+
+== delete service uppercase-command
+domino> riff service delete uppercase-command
+
+riff service delete completed successfully
+
+== create function square-node for local-path
+domino> riff function create square-node --local-path fun --artifact square.js --wait
 Using user-provided builder image 'projectriff/builder:0.2.0-snapshot-ci-a974b8e885d3'
 Pulling builder image 'projectriff/builder:0.2.0-snapshot-ci-a974b8e885d3' (use --no-pull flag to skip this step)
 0.2.0-snapshot-ci-a974b8e885d3: Pulling from projectriff/builder
 Digest: sha256:2bf076cd23beb7c1cd5381c19860991cd0f4bb934655822c126b76be7d1fc7da
 Status: Image is up to date for projectriff/builder:0.2.0-snapshot-ci-a974b8e885d3
 Using user-provided run image 'packs/run:v3alpha2'
-Using cache volume 'pack-cache-28cbf5ac4885626e8b7522a7eaf66830'
+Using cache volume 'pack-cache-bff3fc647fd560c971b8ae114cb7525e'
 ===> DETECTING
-[detector] 2019/03/09 01:11:46 Trying group of 8...
-[detector] 2019/03/09 01:11:47 ======== Output: NPM Buildpack ========
+[detector] 2019/03/09 02:28:03 Trying group of 8...
+[detector] 2019/03/09 02:28:03 ======== Output: NPM Buildpack ========
 [detector] no "package.json" found at: /workspace/app/package.json
-[detector] 2019/03/09 01:11:47 ======== Results ========
-[detector] 2019/03/09 01:11:47 Cloud Foundry OpenJDK Buildpack: pass
-[detector] 2019/03/09 01:11:47 Node.js Buildpack: pass
-[detector] 2019/03/09 01:11:47 Cloud Foundry Build System Buildpack: skip
-[detector] 2019/03/09 01:11:47 NPM Buildpack: skip
-[detector] 2019/03/09 01:11:47 Java Function Buildpack: skip
-[detector] 2019/03/09 01:11:47 Node Function Buildpack: skip
-[detector] 2019/03/09 01:11:47 Command Function Buildpack: pass
-[detector] 2019/03/09 01:11:47 riff Buildpack: pass
+[detector] 2019/03/09 02:28:03 ======== Results ========
+[detector] 2019/03/09 02:28:03 Cloud Foundry OpenJDK Buildpack: pass
+[detector] 2019/03/09 02:28:03 Node.js Buildpack: pass
+[detector] 2019/03/09 02:28:03 Cloud Foundry Build System Buildpack: skip
+[detector] 2019/03/09 02:28:03 NPM Buildpack: skip
+[detector] 2019/03/09 02:28:03 Java Function Buildpack: skip
+[detector] 2019/03/09 02:28:03 Node Function Buildpack: pass
+[detector] 2019/03/09 02:28:03 Command Function Buildpack: skip
+[detector] 2019/03/09 02:28:03 riff Buildpack: pass
 ===> ANALYZING
 Reading information from previous image for possible re-use
-[analyzer] 2019/03/09 01:11:50 using cached launch layer 'io.projectriff.command:{{/workspace/io.projectriff.command/riff-invoker-command io.projectriff.command:riff-invoker-command}}'
-[analyzer] 2019/03/09 01:11:50 rewriting metadata for layer 'io.projectriff.command:{{/workspace/io.projectriff.command/riff-invoker-command io.projectriff.command:riff-invoker-command}}'
-[analyzer] 2019/03/09 01:11:50 writing metadata for uncached layer 'io.projectriff.command/function'
+[analyzer] 2019/03/09 02:28:07 WARNING: image 'gcr.io/cf-sandbox-trisberg/square-node' not found or requires authentication to access
+[analyzer] 2019/03/09 02:28:07 removing cached layers for buildpack 'config' not in group
 ===> BUILDING
 [builder] -----> Cloud Foundry OpenJDK Buildpack 1.0.0-M5
 [builder] 
 [builder] -----> Node.js Buildpack 0.0.2
-[builder] -----> Command Function Buildpack 0.0.8-BUILD-SNAPSHOT
-[builder] -----> riff Command Invoker 0.0.8: Reusing cached layer
-[builder] -----> Command uppercase.sh: Reusing cached layer
+[builder] -----> NodeJS 11.4.0: Contributing to layer
+[builder]        Downloading from https://nodejs.org/dist/v11.4.0/node-v11.4.0-linux-x64.tar.gz
+[builder]        Verifying checksum
+[builder]        Expanding to /workspace/org.cloudfoundry.buildpacks.nodejs/node
+[builder]        Writing NODE_HOME to shared
+[builder]        Writing NODE_ENV to shared
+[builder]        Writing NODE_MODULES_CACHE to shared
+[builder]        Writing NODE_VERBOSE to shared
+[builder]        Writing NPM_CONFIG_PRODUCTION to shared
+[builder]        Writing NPM_CONFIG_LOGLEVEL to shared
+[builder]        Writing WEB_MEMORY to shared
+[builder]        Writing WEB_CONCURRENCY to shared
+[builder] -----> Node Function Buildpack 0.1.0-BUILD-SNAPSHOT
+[builder] -----> riff Node Invoker 0.1.0: Contributing to layer
+[builder]        Reusing cached download from buildpack
+[builder]        Expanding to /workspace/io.projectriff.node/riff-invoker-node
+[builder]        npm-installing the node invoker
+[builder] added 76 packages from 60 contributors and audited 524 packages in 3.187s
+[builder] found 3 moderate severity vulnerabilities
+[builder]   run `npm audit fix` to fix them, or `npm audit` for details
+[builder]        Writing HOST to launch
+[builder]        Writing HTTP_PORT to launch
+[builder] -----> NodeJS square.js: Contributing to layer
+[builder]        Writing FUNCTION_URI to launch
 [builder] -----> Process types:
-[builder]        web:      /workspace/io.projectriff.command/riff-invoker-command/command-function-invoker
-[builder]        function: /workspace/io.projectriff.command/riff-invoker-command/command-function-invoker
+[builder]        web:      node /workspace/io.projectriff.node/riff-invoker-node/server.js
+[builder]        function: node /workspace/io.projectriff.node/riff-invoker-node/server.js
 [builder] 
 ===> EXPORTING
-[exporter] 2019/03/09 01:11:58 reusing layer 'app' with diffID 'sha256:e22d70fdbc8c6d89342df35538efaca7b78303237808fb230b03fe119e556837'
-[exporter] 2019/03/09 01:11:59 reusing layer 'config' with diffID 'sha256:4a352922383595c822e112081accac0f29ab872d014ebf31a03b14b9e92bfaaf'
-[exporter] 2019/03/09 01:11:59 reusing layer 'launcher' with diffID 'sha256:d77dc7ed6207d6bb9c389aa5f087ea7fffea9238e2de84b03f8b3c1152e1e58f'
-[exporter] 2019/03/09 01:11:59 reusing layer 'io.projectriff.command:riff-invoker-command' with diffID 'sha256:8229661d568faeb010fe3add0671b7ab9f5353d97e70a0886d84712cdc09c20a'
-[exporter] 2019/03/09 01:11:59 reusing layer 'io.projectriff.command:function' with diffID 'sha256:3d3ac6997c03acab738cbdbfe33fd0fbce18ad7695d05da12c034232fdb8e234'
-[exporter] 2019/03/09 01:11:59 setting metadata label 'io.buildpacks.lifecycle.metadata'
-[exporter] 2019/03/09 01:11:59 setting env var 'PACK_LAYERS_DIR=/workspace'
-[exporter] 2019/03/09 01:11:59 setting env var 'PACK_APP_DIR=/workspace/app'
-[exporter] 2019/03/09 01:11:59 setting entrypoint '/lifecycle/launcher'
-[exporter] 2019/03/09 01:11:59 setting empty cmd
-[exporter] 2019/03/09 01:11:59 writing image
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:80e339c0631fb56471f967a9838454f62212fcf097b3424152b3a2cd266f52aa
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:38e2e6cd5626f31cea1a0a5751a9a7e6564c589a3388dcf84f00d4bb98146844
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:7308e914506c09fa6d2242368545f55462e024f785e21b21b3e90403081a9336
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:705054bc3f5bd722eb8f026532447fac897c521d8906eb36e79a60d0fb0606fa
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:c7051e0695642c5bf01467a4a64106cabfa20e57fee91b31ee73f7308bccf5bd
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:2da8bfb3b5b741820e6cb29a71f66e8d944ddad2d00c6dc1e31461120ed39e46
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:eab9aae86d5d1fba0b6fbd982b1deb32101922f247de5080505cc908fbfa0770
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:191a14b1d1fa0b720689e40381dacb762ae59ca49925e6629574a1284fb21c3e
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:2501aaff82c2d492dc3f4fd4f526fd3c2e7fd090297559566733f170d92d692f
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:c1681fe3ae4f5d67aa90a05271088e226eacf62149e8ba0d2dc6d6f3b9dcde58
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:b76f64a78498234c109bc1addf29af70508b0f478ed545f7178410b37ef8a0bb
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:8ebc9d87ba086957c7b6388be13cf46b3c7ee910ca72f046476b3ecb950ebcb8
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:4c51b7d9e9ea44f5e1a432b04fd1d3a2accbcc8e8c2ba7455155a6661c868fb8
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:09b3ec4f3bede08b94d415ed2318e8766fb189bf31e69c9ed5d5db5055982f07
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:8cfc5be9bf01a4dfa74dc38bc2c34975f0ec9864c6e9e041e80f84deb238046d
-[exporter] 2019/03/09 01:11:59 existing blob: sha256:01e734c850498f929b8fb427f845545d3ebf3165afdb77c85a9f7dcbda1adc60
-[exporter] 2019/03/09 01:12:00 
-[exporter] *** Image: gcr.io/cf-sandbox-trisberg/uppercase-command@sha256:6d9eb1427dc828e93d6ebd9c722bcd2d046f1733064cc99faf67e400300346ac
-[exporter] 2019/03/09 01:12:00 gcr.io/cf-sandbox-trisberg/uppercase-command:latest: digest: sha256:6d9eb1427dc828e93d6ebd9c722bcd2d046f1733064cc99faf67e400300346ac size: 2691
+[exporter] 2019/03/09 02:28:20 adding layer 'app' with diffID 'sha256:6e2723388f81d24aa20706611f2070b19930b0f0a7d733ce4ef24ed37f9a82fc'
+[exporter] 2019/03/09 02:28:20 adding layer 'config' with diffID 'sha256:137149ad013b98548d4d8ff2996032c8976091c6676c321e33c00930396155e8'
+[exporter] 2019/03/09 02:28:20 adding layer 'launcher' with diffID 'sha256:d77dc7ed6207d6bb9c389aa5f087ea7fffea9238e2de84b03f8b3c1152e1e58f'
+[exporter] 2019/03/09 02:28:21 adding layer 'org.cloudfoundry.buildpacks.nodejs:node' with diffID 'sha256:7017689030b41c6b9d795b6119321662643ca639e5bf9fe91c529c9fac0c320e'
+[exporter] 2019/03/09 02:28:22 adding layer 'io.projectriff.node:function' with diffID 'sha256:f7d33ea91a5275f6b5af0a262c3c15380550486f42bea8759ae0a0498b090aec'
+[exporter] 2019/03/09 02:28:22 adding layer 'io.projectriff.node:riff-invoker-node' with diffID 'sha256:fa93fae25ce7004dbe072906aea6910bf208c7de0481f8cd424e63bcff9aa045'
+[exporter] 2019/03/09 02:28:22 setting metadata label 'io.buildpacks.lifecycle.metadata'
+[exporter] 2019/03/09 02:28:22 setting env var 'PACK_LAYERS_DIR=/workspace'
+[exporter] 2019/03/09 02:28:22 setting env var 'PACK_APP_DIR=/workspace/app'
+[exporter] 2019/03/09 02:28:22 setting entrypoint '/lifecycle/launcher'
+[exporter] 2019/03/09 02:28:22 setting empty cmd
+[exporter] 2019/03/09 02:28:22 writing image
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:cc4a9948d9c45b024c12f51fd77d799259674b7891d0950a9f12ec4605f62532
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:09b3ec4f3bede08b94d415ed2318e8766fb189bf31e69c9ed5d5db5055982f07
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:01e734c850498f929b8fb427f845545d3ebf3165afdb77c85a9f7dcbda1adc60
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:47a4a9e7981087a752c0739a2b509b77b52625fa40cede31f79bcc771d658412
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:eff28008c11cf98e22d2a11fbeb7488f7c8683e09561264768a594b915bfb67f
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:482a4e60757d04a87cc6376ed2cb9a14bcd57e3db1e0040ef751ea76984762d3
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:2501aaff82c2d492dc3f4fd4f526fd3c2e7fd090297559566733f170d92d692f
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:2aa81201552bac8f96e4e2ff41e50a413a3b1de49120b38ac8409837e29a2269
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:38e2e6cd5626f31cea1a0a5751a9a7e6564c589a3388dcf84f00d4bb98146844
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:2da8bfb3b5b741820e6cb29a71f66e8d944ddad2d00c6dc1e31461120ed39e46
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:7308e914506c09fa6d2242368545f55462e024f785e21b21b3e90403081a9336
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:b76f64a78498234c109bc1addf29af70508b0f478ed545f7178410b37ef8a0bb
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:8d1a9d129ebeb1f1ac335fd5846bbe5a2a75bbf872c227f0287df4ac94bb319a
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:4c51b7d9e9ea44f5e1a432b04fd1d3a2accbcc8e8c2ba7455155a6661c868fb8
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:705054bc3f5bd722eb8f026532447fac897c521d8906eb36e79a60d0fb0606fa
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:c7051e0695642c5bf01467a4a64106cabfa20e57fee91b31ee73f7308bccf5bd
+[exporter] 2019/03/09 02:28:22 existing blob: sha256:80e339c0631fb56471f967a9838454f62212fcf097b3424152b3a2cd266f52aa
+[exporter] 2019/03/09 02:28:23 
+[exporter] *** Image: gcr.io/cf-sandbox-trisberg/square-node@sha256:322effef5399cd88e2d97d1f6ebd762562298ed10edc0a9131b5a7ebc1d801d5
+[exporter] 2019/03/09 02:28:23 gcr.io/cf-sandbox-trisberg/square-node:latest: digest: sha256:322effef5399cd88e2d97d1f6ebd762562298ed10edc0a9131b5a7ebc1d801d5 size: 2855
 
 riff function create completed successfully
 
-domino> riff service invoke uppercase-command --text -- -w \n -d domino
-curl 35.238.161.31/ -H 'Host: uppercase-command.default.example.com' -H 'Content-Type: text/plain' -w '\n' -d domino
-DOMINO
+domino> riff service invoke square-node --json -- -w \n -d 7
+curl 35.192.124.58/ -H 'Host: square-node.default.example.com' -H 'Content-Type: application/json' -w '\n' -d 7
+49
 
-== delete service uppercase-command
-domino> riff service delete uppercase-command
+== delete service square-node
+domino> riff service delete square-node
 
 riff service delete completed successfully
 
