@@ -1,5 +1,4 @@
 import util
-import time
 
 def create_channel(name):
     print("== create channel {name} as in-memory-channel".format(name=name))
@@ -18,13 +17,7 @@ def create_subscription(name, channel, reply):
 
 def invoke_correlator(channel, data, expected):
     print("== invoking correlator with {data} for {channel}".format(data=data, channel=channel))
-    i = 1
-    while i < 10: 
-        ksvc = util.get_cmd(["kubectl", "get", "kservice", "correlator", "-ojsonpath={.status.address.hostname}"])
-        if len(ksvc[0].decode()) > 0:
-            break
-        i += 1
-        time.sleep(5)
+    util.wait_for_service("correlator")
     host = util.get_cmd(["kubectl", "get", "channel", "numbers", "-ojsonpath={.status.address.hostname}"])
     chan = host[0].decode().split(".")[0]
     if str(data).isdigit():

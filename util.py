@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, time
 from subprocess import Popen, PIPE, STDOUT
 
 global skip_install
@@ -44,3 +44,12 @@ def delete_resource(resource_type, name):
     output = run_cmd(["riff", resource_type, "delete", name])
     completed = output[len(output)-1]
     assert completed == "riff {type} delete completed successfully".format(type=resource_type)
+
+def wait_for_service(name):
+    i = 1
+    while i < 10: 
+        ksvc = get_cmd(["kubectl", "get", "kservice", name, "-ojsonpath={.status.address.hostname}"])
+        if len(ksvc[0].decode()) > 0:
+            break
+        i += 1
+        time.sleep(5)
