@@ -1,15 +1,15 @@
 import util
 import os
 
-def test_fun(name, git, toml, data, expected):
-    util.create_fun(name, git, toml)
+def test_fun(name, git, args, data, expected):
+    util.create_fun(name, git, args)
     util.wait_for_service(name)
     invoke_fun(name, data, expected)
     util.delete_svc(name)
 
-def local_fun(name, path, toml, data, expected):
+def local_fun(name, path, args, data, expected):
     print("== create function {name} for local-path".format(name=name))
-    output = util.run_cmd(["riff", "function", "create", name, "--local-path", path, toml.split(" ")[0], toml.split(" ")[1], "--wait"])
+    output = util.run_cmd(["riff", "function", "create", name, "--local-path", path] + args.split(" ") + ["--wait"])
     completed = output[len(output)-1]
     assert completed == "riff function create completed successfully"
     util.wait_for_service(name)

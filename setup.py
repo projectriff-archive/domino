@@ -22,6 +22,7 @@ def run():
         output = util.run_cmd(["riff", "system", "install", "--force"])
         completed = output[len(output)-1]
         assert completed == "riff system install completed successfully"
+        util.wait_for_webhook()
 
     print("== namespace init default")
     util.run_cmd(["riff", "namespace", "cleanup", "default"])

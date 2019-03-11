@@ -24,9 +24,9 @@ def get_cmd(command):
     assert rc == 0
     return output
 
-def create_fun(name, git, toml):
+def create_fun(name, git, args):
     print("== create function {name}".format(name=name))
-    output = run_cmd(["riff", "function", "create", name, "--git-repo", git, toml.split(" ")[0], toml.split(" ")[1], "--wait"])
+    output = run_cmd(["riff", "function", "create", name, "--git-repo", git] + args.split(" ") + ["--wait"])
     completed = output[len(output)-1]
     assert completed == "riff function create completed successfully"
 
@@ -50,6 +50,15 @@ def wait_for_service(name):
     while i < 10: 
         ksvc = get_cmd(["kubectl", "get", "kservice", name, "-ojsonpath={.status.address.hostname}"])
         if len(ksvc[0].decode()) > 0:
+            break
+        i += 1
+        time.sleep(5)
+
+def wait_for_webhook():
+    i = 1
+    while i < 10: 
+        available = get_cmd(["kubectl", "get", "--namespace", "knative-serving", "deployment", "webhook", "-ojsonpath={.status.availableReplicas}"])[0].decode()
+        if len(available) > 0 and available.isdigit() and int(available) > 0:
             break
         i += 1
         time.sleep(5)
