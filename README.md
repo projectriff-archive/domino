@@ -8,6 +8,7 @@ What you need:
 - a recent install of `kubectl` available on the system path
 - a json key file for a service account with push credentials to the GCR repo you are using
 - a Kubernetes cluster that can run riff running on GKE - see https://projectriff.io/docs/getting-started/gke/ 
+- kubeconfig configured to use the GKE cluster
 - a recent version of Python 3
 
 What it does:
