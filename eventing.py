@@ -2,18 +2,18 @@ import util
 
 def create_channel(name):
     print("== create channel {name} as in-memory-channel".format(name=name))
-    output = util.run_cmd(["riff", "channel", "create", name, "--cluster-provisioner", "in-memory-channel"])
+    output = util.run_cmd([util.cli, "channel", "create", name, "--cluster-provisioner", "in-memory-channel"])
     completed = output[len(output)-1]
-    assert completed == "riff channel create completed successfully"
+    assert completed == "{cli} channel create completed successfully".format(cli=util.cli)
 
 def create_subscription(name, channel, reply):
     print("== create subscription {name} for {channel}".format(name=name, channel=channel))
     if len(reply) > 0:
-        output = util.run_cmd(["riff", "subscription", "create", name, "--channel", channel, "--reply", reply, "--subscriber", name])
+        output = util.run_cmd([util.cli, "subscription", "create", name, "--channel", channel, "--reply", reply, "--subscriber", name])
     else:
-        output = util.run_cmd(["riff", "subscription", "create", name, "--channel", channel, "--subscriber", name])
+        output = util.run_cmd([util.cli, "subscription", "create", name, "--channel", channel, "--subscriber", name])
     completed = output[len(output)-1]
-    assert completed == "riff subscription create completed successfully"
+    assert completed == "{cli} subscription create completed successfully".format(cli=util.cli)
 
 def invoke_correlator(channel, data, expected):
     print("== invoking correlator with {data} for {channel}".format(data=data, channel=channel))
@@ -21,9 +21,9 @@ def invoke_correlator(channel, data, expected):
     host = util.get_cmd(["kubectl", "get", "channel", "numbers", "-ojsonpath={.status.address.hostname}"])
     chan = host[0].decode().split(".")[0]
     if str(data).isdigit():
-        output = util.run_cmd(["riff", "service", "invoke", "correlator", "/default/"+chan, "--json", "--", "-H", "knative-blocking-request:true", "-w", "\\n", "-d", str(data)])
+        output = util.run_cmd([util.cli, "service", "invoke", "correlator", "/default/"+chan, "--json", "--", "-H", "knative-blocking-request:true", "-w", "\\n", "-d", str(data)])
     else:
-        output = util.run_cmd(["riff", "service", "invoke", "correlator", "/default/"+chan, "--text", "--", "-H", "knative-blocking-request:true", "-w", "\\n", "-d", data])
+        output = util.run_cmd([util.cli, "service", "invoke", "correlator", "/default/"+chan, "--text", "--", "-H", "knative-blocking-request:true", "-w", "\\n", "-d", data])
     result = output[len(output)-1]
     assert result == str(expected)
 

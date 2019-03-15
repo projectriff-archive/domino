@@ -2,6 +2,8 @@ import sys, os, time
 from subprocess import Popen, PIPE, STDOUT
 
 global skip_install
+global cli
+global manifest
 
 def run_cmd(command):
     print("domino> " + " ".join(command))
@@ -26,24 +28,24 @@ def get_cmd(command):
 
 def create_fun(name, git, args):
     print("== create function {name}".format(name=name))
-    output = run_cmd(["riff", "function", "create", name, "--git-repo", git] + args.split(" ") + ["--wait"])
+    output = run_cmd([cli, "function", "create", name, "--git-repo", git] + args.split(" ") + ["--wait"])
     completed = output[len(output)-1]
-    assert completed == "riff function create completed successfully"
+    assert completed == "{cli} function create completed successfully".format(cli=cli)
 
 def create_svc(name, image):
     print("== create service {name} using image {image}".format(name=name, image=image))
-    output = run_cmd(["riff", "service", "create", name, "--image", image])
+    output = run_cmd([cli, "service", "create", name, "--image", image])
     completed = output[len(output)-1]
-    assert completed == "riff service create completed successfully"
+    assert completed == "{cli} service create completed successfully".format(cli=cli)
 
 def delete_svc(name):
     delete_resource("service", name)
 
 def delete_resource(resource_type, name):
     print("== delete {type} {name}".format(type=resource_type, name=name))
-    output = run_cmd(["riff", resource_type, "delete", name])
+    output = run_cmd([cli, resource_type, "delete", name])
     completed = output[len(output)-1]
-    assert completed == "riff {type} delete completed successfully".format(type=resource_type)
+    assert completed == "{cli} {type} delete completed successfully".format(cli=cli, type=resource_type)
 
 def wait_for_service(name):
     i = 1

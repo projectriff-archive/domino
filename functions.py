@@ -9,18 +9,18 @@ def test_fun(name, git, args, data, expected):
 
 def local_fun(name, path, args, data, expected):
     print("== create function {name} for local-path".format(name=name))
-    output = util.run_cmd(["riff", "function", "create", name, "--local-path", path] + args.split(" ") + ["--wait"])
+    output = util.run_cmd([util.cli, "function", "create", name, "--local-path", path] + args.split(" ") + ["--wait"])
     completed = output[len(output)-1]
-    assert completed == "riff function create completed successfully"
+    assert completed == "{cli} function create completed successfully".format(cli=util.cli)
     util.wait_for_service(name)
     invoke_fun(name, data, expected)
     util.delete_svc(name)
 
 def invoke_fun(name, data, expected):
     if str(data).isdigit():
-        output = util.run_cmd(["riff", "service", "invoke", name, "--json", "--", "-w", "\\n", "-d", str(data)])
+        output = util.run_cmd([util.cli, "service", "invoke", name, "--json", "--", "-w", "\\n", "-d", str(data)])
     else:
-        output = util.run_cmd(["riff", "service", "invoke", name, "--text", "--", "-w", "\\n", "-d", data])
+        output = util.run_cmd([util.cli, "service", "invoke", name, "--text", "--", "-w", "\\n", "-d", data])
     result = output[len(output)-1]
     assert result == str(expected)
 

@@ -1,10 +1,11 @@
 # domino
 
-Domino is a FaaS Acceptance Test Suite for riff on Windows
+Domino is a FaaS Acceptance Test Suite for riff and PFS on Windows
 
 What you need:
 
-- a recent build of `riff` available on the system path
+- a recent build of `riff` or `pfs` CLI available on the system path, for PFS testing provide `--pfs` arg
+- for PFS you need the distro files (relocated or not) with manifest location provided via `--manifest` arg
 - a recent install of `kubectl` available on the system path
 - a json key file for a service account with push credentials to the GCR repo you are using
 - a Kubernetes cluster that can run riff running on GKE - see https://projectriff.io/docs/getting-started/gke/ 
@@ -14,14 +15,26 @@ What you need:
 What it does:
 
 - runs everything from a Windows PowerShell
-- uses `riff` and `kubectl` commands for everything
-- installs Istio, Knative and riff (optional)
+- uses `riff`/`pfs` and `kubectl` commands for everything
+- installs Istio, Knative and riff/PFS (optional)
 - prepares the default namespace for GCR push
 - creates and tests Java and command functions building on cluster
 - creates and tests Node.js function with local-path build
 - creates functions, channels and subscriptions for "Hello 49" test
 - cleans up the namespace
 - uninstalls Istio, Knative and riff (optional)
+
+Usage:
+
+```[bash]
+usage: domino.py [-h] [--pfs] [--manifest MANIFEST] [--skip-install]
+
+optional arguments:
+  -h, --help           show this help message and exit
+  --pfs                test using pfs CLI
+  --manifest MANIFEST  the manifest to test with
+  --skip-install       whether to skip the system install/uninstall
+```
 
 ## prepare
 
@@ -48,7 +61,9 @@ python ./domino.py
 
 _NOTE_: Depending on how Python is installed you should use either `python` or `python3`
 
-_NOTE_: If you already have riff/Knative installed you can add the arg `--skip-install` to keep what you already have.
+_NOTE_: For tetsing PFS provide `--pfs` arg and also `--manifest` arg pointing to the location for the PFS manifest to use.
+
+_NOTE_: If you already have riff/PFS installed you can add the arg `--skip-install` to keep what you have.
 
 That's it.
 
