@@ -61,7 +61,7 @@ python ./domino.py
 
 _NOTE_: Depending on how Python is installed you should use either `python` or `python3`
 
-_NOTE_: For tetsing PFS provide `--pfs` arg and also `--manifest` arg pointing to the location for the PFS manifest to use.
+_NOTE_: For testing PFS provide `--pfs` arg and also `--manifest` arg pointing to the location for the PFS manifest to use.
 
 _NOTE_: If you already have riff/PFS installed you can add the arg `--skip-install` to keep what you have.
 
