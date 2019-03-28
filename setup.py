@@ -30,6 +30,9 @@ def run():
 
     print("== namespace init default")
     util.run_cmd([util.cli, "namespace", "cleanup", "default"])
-    output = util.run_cmd([util.cli, "namespace", "init", "default", "--manifest", util.manifest, "--gcr", "./push-image.json"])
+    if util.docker_secret > "":
+        output = util.run_cmd([util.cli, "namespace", "init", "default", "--manifest", util.manifest, "--secret", util.docker_secret, "--image-prefix", util.docker_user])
+    else:
+        output = util.run_cmd([util.cli, "namespace", "init", "default", "--manifest", util.manifest, "--gcr", "./push-image.json"])
     completed = output[len(output)-1]
     assert completed == "{cli} namespace init completed successfully".format(cli=util.cli)
