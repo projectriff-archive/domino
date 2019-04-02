@@ -54,6 +54,7 @@ def wait_for_service(name):
     while i < 10: 
         ksvc = get_cmd(["kubectl", "get", "kservice", name, "-ojsonpath={.status.address.hostname}"])
         if len(ksvc[0].decode()) > 0:
+            time.sleep(2)
             break
         i += 1
         time.sleep(5)
