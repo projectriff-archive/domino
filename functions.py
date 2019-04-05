@@ -10,8 +10,6 @@ def test_fun(name, git, args, data, expected):
 def local_fun(name, path, args, data, expected):
     print("== create function {name} for local-path".format(name=name))
     output = util.run_cmd([util.cli, "function", "create", name, "--local-path", path] + args.split(" ") + ["--wait"])
-    completed = output[len(output)-1]
-    assert completed == "{cli} function create completed successfully".format(cli=util.cli)
     util.wait_for_service(name)
     invoke_fun(name, data, expected)
     util.delete_svc(name)

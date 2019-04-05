@@ -31,7 +31,7 @@ def get_cmd(command):
 def create_fun(name, git, args):
     print("== create function {name}".format(name=name))
     output = run_cmd([cli, "function", "create", name, "--git-repo", git] + args.split(" ") + ["--wait"])
-    completed = output[len(output)-1]
+    completed = output[len(output)-2]
     assert completed == "{cli} function create completed successfully".format(cli=cli)
 
 def create_svc(name, image):
