@@ -1,3 +1,5 @@
 push-image.json
 __pycache__/
 .pack/
+.vscode/
+*.yaml

@@ -4,8 +4,9 @@ from subprocess import Popen, PIPE, STDOUT
 global skip_install
 global cli
 global manifest
-global docker_secret
-global docker_user
+global push_secret
+global pull_secret
+global image_prefix
 
 def run_cmd(command):
     print("domino> " + " ".join(command))
