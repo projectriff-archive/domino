@@ -33,7 +33,10 @@ def run():
     if util.pull_secret > "":
         output = util.run_cmd([util.cli, "namespace", "init", "default", "--manifest", util.manifest, "--secret", util.pull_secret])
     if util.push_secret > "":
-        output = util.run_cmd([util.cli, "namespace", "init", "default", "--manifest", util.manifest, "--secret", util.push_secret, "--image-prefix", util.image_prefix])
+        if util.push_secret == "none":
+            output = util.run_cmd([util.cli, "namespace", "init", "default", "--manifest", util.manifest, "--no-secret", "--image-prefix", util.image_prefix])
+        else:
+            output = util.run_cmd([util.cli, "namespace", "init", "default", "--manifest", util.manifest, "--secret", util.push_secret, "--image-prefix", util.image_prefix])
     else:
         output = util.run_cmd([util.cli, "namespace", "init", "default", "--manifest", util.manifest, "--gcr", "./push-image.json"])
     completed = output[len(output)-1]
