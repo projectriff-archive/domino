@@ -27,13 +27,21 @@ What it does:
 Usage:
 
 ```[bash]
-usage: domino.py [-h] [--pfs] [--manifest MANIFEST] [--skip-install]
+usage: domino.py [-h] [--pfs] [--manifest MANIFEST]
+                 [--push-secret PUSH_SECRET] [--pull-secret PULL_SECRET]
+                 [--image-prefix IMAGE_PREFIX] [--skip-install]
 
 optional arguments:
-  -h, --help           show this help message and exit
-  --pfs                test using pfs CLI
-  --manifest MANIFEST  the manifest to test with
-  --skip-install       whether to skip the system install/uninstall
+  -h, --help            show this help message and exit
+  --pfs                 test using pfs CLI
+  --manifest MANIFEST   the manifest to test with
+  --push-secret PUSH_SECRET
+                        the push secret to use for builds
+  --pull-secret PULL_SECRET
+                        an optional pull secret to use for builds
+  --image-prefix IMAGE_PREFIX
+                        the image prefix to use
+  --skip-install        whether to skip the system install/uninstall
 ```
 
 ## prepare
